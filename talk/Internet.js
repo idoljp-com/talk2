@@ -1,20 +1,23 @@
-/* Internet_各坂道 用データ設定
-   乃木坂46・櫻坂46・日向坂46の3ルームで共通利用します。
-   表示対象は index.html から渡された room のグループ値で絞り込みます。 */
-(() => {
+(function () {
   'use strict';
-  const publishedSheetId = '2PACX-1vTfLQRvus5Misi0An0YiOZNb9Mb2DFnuoBHseWBSnDJS0j1m-v4dWziIt84j00lw1RomYU9i-MqKuWv';
+
+  // Internet_nogizaka46
+  // Internet_sakurazaka46
+  // Internet_hinatazaka46 共通データ設定
+
+  // グループの絞り込みはindex.html側で行います。
+
+  const PUBLISHED_SHEET_ID =
+    '2PACX-1vTfLQRvus5Misi0An0YiOZNb9Mb2DFnuoBHseWBSnDJS0j1m-v4dWziIt84j00lw1RomYU9i-MqKuWv';
+
+  const CSV_URL =
+    `https://docs.google.com/spreadsheets/d/e/${PUBLISHED_SHEET_ID}/pub?output=csv`;
+
   window.TALK_SOURCES = window.TALK_SOURCES || {};
+
   window.TALK_SOURCES.Internet = {
-    csvUrl: `https://docs.google.com/spreadsheets/d/e/${publishedSheetId}/pub?output=csv`,
-    filterByGroup: true,
-    columns: {
-      date: ['日時','日付','timestamp'],
-      from: ['from','投稿者','名前'],
-      image: ['画像URL','画像 url','画像','image','imageurl'],
-      group: ['グループ','group'],
-      member: ['メンバー','member'],
-      message: ['本文','メッセージ','テキスト','内容','message']
-    }
+    csvUrl: CSV_URL,
+    filterByGroup: true
   };
+
 })();
