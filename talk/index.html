@@ -820,13 +820,29 @@ body {
     avatar.alt = item.from;
     avatar.loading = 'lazy';
 
-    avatar.src = new URL(
+    /* 投稿者名に対応するアイコン */
+    const avatarUrl = new URL(
       '../user_img/' + encodeURIComponent(item.from) + '.jpg',
       document.baseURI
     ).href;
 
+    /* 個別アイコンがない場合の共通アイコン */
+    const unknownAvatarUrl = new URL(
+      '../user_img/unknown.jpg',
+      document.baseURI
+    ).href;
+
+    avatar.src = avatarUrl;
+
+    /* 個別画像が読み込めなければunknown.jpgに切り替える */
     avatar.onerror = () => {
-      avatar.style.visibility = 'hidden';
+      /* unknown.jpg自体も存在しない場合の無限ループを防止 */
+      if (avatar.src !== unknownAvatarUrl) {
+        avatar.src = unknownAvatarUrl;
+      } else {
+        avatar.onerror = null;
+        avatar.style.visibility = 'hidden';
+      }
     };
 
     avatarWrap.appendChild(avatar);
