@@ -5,434 +5,261 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#a72bbd">
 <title>トーク</title>
-
 <style>
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
-
-html, body {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Noto Sans JP", sans-serif;
-  background: #000;
-  color: #444;
-}
-
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.app {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: #fff;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-@media (min-width: 600px) {
-  .app {
-    width: 390px;
-    height: min(844px, 94vh);
-    border-radius: 36px;
-    box-shadow: 0 0 0 8px #222;
-  }
-}
-
-.header {
-  flex: 0 0 82px;
-  height: 82px;
-  background: linear-gradient(110deg, #d36ae1 0%, #ad35c4 55%, #9219ad 100%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-  position: relative;
-  padding-top: env(safe-area-inset-top);
-  z-index: 5;
-}
-
-.header-title {
-  font-size: 23px;
-  font-weight: 500;
-  max-width: 58%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.header-button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 34px;
-  height: 34px;
-  border: 0;
-  background: none;
-  color: #fff;
-  padding: 3px;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-}
-
-.back {
-  left: 16px;
-  text-decoration: none;
-  font-size: 38px;
-  font-weight: 200;
-  line-height: 1;
-}
-
-.mail {
-  right: 65px;
-}
-
-.menu {
-  right: 14px;
-  font-size: 25px;
-  letter-spacing: 1px;
-}
-
-.header-button svg {
-  width: 100%;
-  height: 100%;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.main {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  background: #fff;
-  scrollbar-width: none;
-  padding: 0 12px calc(22px + env(safe-area-inset-bottom));
-  overscroll-behavior: contain;
-}
-
-.main::-webkit-scrollbar {
-  display: none;
-}
-
-.post {
-  display: grid;
-  grid-template-columns: 76px minmax(0, 1fr);
-  column-gap: 12px;
-  margin: 3px 0 48px;
-  align-items: start;
-}
-
-.avatar-wrap {
-  padding-top: 2px;
-  display: flex;
-  justify-content: center;
-}
-
-.avatar {
-  width: 66px;
-  height: 66px;
-  border-radius: 50%;
-  object-fit: cover;
-  background: #f7e1d2;
-}
-
-.post-body {
-  min-width: 0;
-}
-
-.post-meta {
-  height: 34px;
-  display: flex;
-  align-items: flex-start;
-  gap: 18px;
-  min-width: 0;
-  font-size: 18px;
-  line-height: 1.35;
-  white-space: nowrap;
-}
-
-.post-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 52%;
-  color: #444;
-}
-
-.post-date {
-  color: #555;
-  font-size: 17px;
-}
-
-.post-menu {
-  margin-left: auto;
-  border: 0;
-  background: none;
-  color: #aaa;
-  font-size: 22px;
-  line-height: 14px;
-  padding: 0 1px;
-  cursor: pointer;
-}
-
-.bubble {
-  position: relative;
-  background: #f6f6f6;
-  border-radius: 6px;
-  padding: 28px 28px 30px;
-  min-height: 74px;
-  font-size: 18px;
-  line-height: 1.65;
-  overflow-wrap: anywhere;
-}
-
-.bubble:before {
-  content: "";
-  position: absolute;
-  left: -12px;
-  top: 12px;
-  border-width: 0 13px 14px 0;
-  border-style: solid;
-  border-color: transparent #f6f6f6 transparent transparent;
-}
-
-.post-image {
-  display: block;
-  width: auto;
-  max-width: min(100%, 260px);
-  max-height: 470px;
-  object-fit: contain;
-  border-radius: 6px;
-  margin: 0 auto 24px;
-  cursor: zoom-in;
-}
-
-.message {
-  white-space: pre-wrap;
-}
-
-.loading,
-.empty,
-.error {
-  padding: 50px 16px;
-  text-align: center;
-  color: #999;
-  font-size: 15px;
-  line-height: 1.8;
-  white-space: pre-wrap;
-}
-
-/* 上方向の追加読み込み */
-
-.older-loader {
-  display: none;
-  text-align: center;
-  padding: 18px 10px 25px;
-  color: #999;
-  font-size: 13px;
-}
-
-.older-loader.show {
-  display: block;
-}
-
-.spinner {
-  width: 23px;
-  height: 23px;
-  border: 2px solid #e8d9eb;
-  border-top-color: #a72bbd;
-  border-radius: 50%;
-  animation: spin .7s linear infinite;
-  margin: 0 auto 9px;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* 最新へ戻るボタン */
-
-.to-bottom {
-  position: absolute;
-  right: 14px;
-  bottom: calc(18px + env(safe-area-inset-bottom));
-  width: 42px;
-  height: 42px;
-  border: 0;
-  border-radius: 50%;
-  background: #a72bbd;
-  color: #fff;
-  font-size: 23px;
-  line-height: 1;
-  box-shadow: 0 2px 6px #0003;
-  cursor: pointer;
-  z-index: 10;
-  display: none;
-  align-items: center;
-  justify-content: center;
-}
-
-.to-bottom.show {
-  display: flex;
-}
-
-/* 画像拡大表示 */
-
-.image-viewer {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  background: rgba(0, 0, 0, .94);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 50px 12px;
-}
-
-.image-viewer.show {
-  display: flex;
-}
-
-.image-viewer img {
-  display: block;
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  border-radius: 3px;
-  user-select: none;
-}
-
-.viewer-close {
-  position: absolute;
-  top: calc(12px + env(safe-area-inset-top));
-  right: 14px;
-  width: 42px;
-  height: 42px;
-  border: 0;
-  border-radius: 50%;
-  background: rgba(255,255,255,.16);
-  color: #fff;
-  font-size: 30px;
-  font-weight: 300;
-  line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-@media (max-width: 380px) {
-  .post {
-    grid-template-columns: 62px minmax(0, 1fr);
-    column-gap: 8px;
-  }
-
-  .avatar {
-    width: 56px;
-    height: 56px;
-  }
-
-  .post-meta {
-    gap: 9px;
-    font-size: 16px;
-  }
-
-  .post-date {
-    font-size: 15px;
-  }
-
-  .bubble {
-    padding: 22px 20px 24px;
-    font-size: 16px;
-  }
-
-  .post-image {
-    max-width: 100%;
-  }
-}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Noto Sans JP",sans-serif;background:#000;color:#444}
+body{display:flex;justify-content:center;align-items:center}
+.app{position:relative;width:100%;height:100%;background:#fff;display:flex;flex-direction:column;overflow:hidden}
+@media(min-width:600px){.app{width:390px;height:min(844px,94vh);border-radius:36px;box-shadow:0 0 0 8px #222}}
+.header{flex:0 0 82px;height:82px;background:linear-gradient(110deg,#d36ae1 0%,#ad35c4 55%,#9219ad 100%);display:flex;justify-content:center;align-items:center;color:#fff;position:relative;padding-top:env(safe-area-inset-top);z-index:5}
+.header-title{font-size:23px;font-weight:500;max-width:70%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.header-button{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border:0;background:none;color:#fff;padding:3px;display:grid;place-items:center;cursor:pointer}
+.back{left:16px;text-decoration:none;font-size:38px;font-weight:200;line-height:1}
+.menu{right:14px;font-size:25px;letter-spacing:1px}
+.main{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;background:#fff;scrollbar-width:none;padding:0 12px calc(22px + env(safe-area-inset-bottom));overscroll-behavior:contain}
+.main::-webkit-scrollbar{display:none}
+.post{display:grid;grid-template-columns:76px minmax(0,1fr);column-gap:12px;margin:3px 0 48px;align-items:start}
+.avatar-wrap{padding-top:2px;display:flex;justify-content:center}
+.avatar{width:66px;height:66px;border-radius:50%;object-fit:cover;background:#f7e1d2}
+.post-body{min-width:0}
+.post-meta{height:34px;display:flex;align-items:flex-start;gap:18px;min-width:0;font-size:18px;line-height:1.35;white-space:nowrap}
+.post-name{overflow:hidden;text-overflow:ellipsis;max-width:52%;color:#444}
+.post-date{color:#555;font-size:17px}
+.post-menu{margin-left:auto;border:0;background:none;color:#aaa;font-size:22px;line-height:14px;padding:0 1px;cursor:pointer}
+.bubble{position:relative;background:#f6f6f6;border-radius:6px;padding:28px 28px 30px;min-height:74px;font-size:18px;line-height:1.65;overflow-wrap:anywhere}
+.bubble:before{content:"";position:absolute;left:-12px;top:12px;border-width:0 13px 14px 0;border-style:solid;border-color:transparent #f6f6f6 transparent transparent}
+.post-image{display:block;width:auto;max-width:min(100%,260px);max-height:470px;object-fit:contain;border-radius:6px;margin:0 auto 24px;cursor:zoom-in}
+.message{white-space:pre-wrap}
+.loading,.empty,.error{padding:50px 16px;text-align:center;color:#999;font-size:15px;line-height:1.8;white-space:pre-wrap}
+.older-loader{display:none;text-align:center;padding:18px 10px 25px;color:#999;font-size:13px}
+.older-loader.show{display:block}
+.spinner{width:23px;height:23px;border:2px solid #e8d9eb;border-top-color:#a72bbd;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 9px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.to-bottom{position:absolute;right:14px;bottom:calc(18px + env(safe-area-inset-bottom));width:42px;height:42px;border:0;border-radius:50%;background:#a72bbd;color:#fff;font-size:23px;line-height:1;box-shadow:0 2px 6px #0003;cursor:pointer;z-index:10;display:none;align-items:center;justify-content:center}
+.to-bottom.show{display:flex}
+.image-viewer{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.94);display:none;align-items:center;justify-content:center;padding:50px 12px}
+.image-viewer.show{display:flex}
+.image-viewer img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:3px;user-select:none}
+.viewer-close{position:absolute;top:calc(12px + env(safe-area-inset-top));right:14px;width:42px;height:42px;border:0;border-radius:50%;background:rgba(255,255,255,.16);color:#fff;font-size:30px;font-weight:300;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+@media(max-width:380px){.post{grid-template-columns:62px minmax(0,1fr);column-gap:8px}.avatar{width:56px;height:56px}.post-meta{gap:9px;font-size:16px}.post-date{font-size:15px}.bubble{padding:22px 20px 24px;font-size:16px}.post-image{max-width:100%}}
 </style>
 </head>
-
 <body>
-
 <div class="app">
-
   <header class="header">
-
-    <a class="header-button back"
-       href="./index.html"
-       aria-label="戻る">‹</a>
-
+    <a class="header-button back" href="../index.html" aria-label="戻る">‹</a>
     <div class="header-title" id="roomTitle">トーク</div>
-
-    <button class="header-button mail"
-            type="button"
-            aria-label="Letter"
-            id="letterButton">
-      <svg viewBox="0 0 32 32">
-        <rect x="2.5" y="5" width="27" height="21" rx="1.5"/>
-        <path d="m3.5 7 12.5 11L28.5 7"/>
-      </svg>
-    </button>
-
-    <button class="header-button menu"
-            id="menuButton"
-            type="button"
-            aria-label="メニュー">•••</button>
-
+    <button class="header-button menu" id="menuButton" type="button" aria-label="メニュー">•••</button>
   </header>
-
   <main class="main" id="main">
-
-    <div class="loading" id="status">
-      投稿を読み込んでいます…
-    </div>
-
-    <div class="older-loader" id="olderLoader">
-      <div class="spinner"></div>
-      古い投稿を読み込んでいます…
-    </div>
-
+    <div class="loading" id="status">投稿を読み込んでいます…</div>
+    <div class="older-loader" id="olderLoader"><div class="spinner"></div>古い投稿を読み込んでいます…</div>
     <div id="posts"></div>
-
   </main>
-
-  <button class="to-bottom"
-          id="toBottom"
-          type="button"
-          aria-label="最新の投稿へ戻る">↓</button>
-
+  <button class="to-bottom" id="toBottom" type="button" aria-label="最新の投稿へ戻る">↓</button>
 </div>
-
-<!-- 画像拡大表示 -->
-
 <div class="image-viewer" id="imageViewer">
-
-  <button class="viewer-close"
-          id="viewerClose"
-          type="button"
-          aria-label="閉じる">×</button>
-
+  <button class="viewer-close" id="viewerClose" type="button" aria-label="閉じる">×</button>
   <img id="viewerImage" src="" alt="拡大画像">
-
 </div>
+<script>
+(() => {
+'use strict';
 
-<script src="Owner.js" defer></script>
-<script src="Internet.js" defer></script>
+const ROOM_CONFIG = {
+  Owner_3saka: {source:'Owner', title:'🔞ガールズルール🔞'},
+  Internet_nogizaka46: {source:'Internet', title:'乃木坂46', group:'nogizaka46'},
+  Internet_sakurazaka46: {source:'Internet', title:'櫻坂46', group:'sakurazaka46'},
+  Internet_hinatazaka46: {source:'Internet', title:'日向坂46', group:'hinatazaka46'}
+};
+const POSTS_PER_LOAD = 20;
+const room = new URLSearchParams(location.search).get('room') || '';
+const roomInfo = ROOM_CONFIG[room];
 
+const titleEl = document.getElementById('roomTitle');
+const statusEl = document.getElementById('status');
+const postsEl = document.getElementById('posts');
+const mainEl = document.getElementById('main');
+const toBottom = document.getElementById('toBottom');
+const olderLoader = document.getElementById('olderLoader');
+const imageViewer = document.getElementById('imageViewer');
+const viewerImage = document.getElementById('viewerImage');
+
+let allPosts = [];
+let nextIndex = 0;
+let loadingOlder = false;
+let allLoaded = false;
+
+document.getElementById('menuButton').addEventListener('click', () => {
+  alert('メニュー');
+});
+
+function parseCSV(text) {
+  const rows=[]; let row=[]; let field=''; let quoted=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i], next=text[i+1];
+    if(quoted){
+      if(c==='"'&&next==='"'){field+='"';i++;}
+      else if(c==='"') quoted=false;
+      else field+=c;
+    }else if(c==='"') quoted=true;
+    else if(c===','){row.push(field);field='';}
+    else if(c==='\n'){row.push(field);rows.push(row);row=[];field='';}
+    else if(c!=='\r') field+=c;
+  }
+  row.push(field);
+  if(row.some(v=>v!=='')) rows.push(row);
+  return rows;
+}
+function normalizeHeader(v){return String(v||'').replace(/^\uFEFF/,'').trim().replace(/\s/g,'').toLowerCase();}
+function findColumn(headers,candidates){
+  const normalized=headers.map(normalizeHeader);
+  for(const c of candidates){const i=normalized.indexOf(normalizeHeader(c));if(i!==-1)return i;}
+  return -1;
+}
+function normalizeGroup(value){
+  const v=String(value||'').replace(/^\uFEFF/,'').replace(/\s/g,'').toLowerCase();
+  const aliases={'乃木坂46':'nogizaka46','nogizaka46':'nogizaka46','櫻坂46':'sakurazaka46','桜坂46':'sakurazaka46','sakurazaka46':'sakurazaka46','日向坂46':'hinatazaka46','hinatazaka46':'hinatazaka46'};
+  return aliases[v]||v;
+}
+function safeImageUrl(value){
+  const raw=String(value||'').trim(); if(!raw)return '';
+  try{const u=new URL(raw);return u.protocol==='http:'||u.protocol==='https:'?u.href:'';}catch(e){return '';}
+}
+function formatDate(value){
+  const raw=String(value||'').trim(); if(!raw)return '';
+  const m=raw.match(/^(\d{4})[/-](\d{1,2})[/-](\d{1,2})(?:\s+(\d{1,2}):(\d{2}))?$/);
+  if(m)return `${Number(m[2])}/${Number(m[3])}`+(m[4]?` ${String(m[4]).padStart(2,'0')}:${m[5]}`:'');
+  const d=new Date(raw);
+  if(!Number.isNaN(d.getTime()))return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  return raw;
+}
+function dateValue(value){
+  const raw=String(value||'').trim();
+  const m=raw.match(/^(\d{4})[/-](\d{1,2})[/-](\d{1,2})(?:\s+(\d{1,2}):(\d{2}))?$/);
+  if(m)return new Date(+m[1],+m[2]-1,+m[3],+(m[4]||0),+(m[5]||0)).getTime();
+  return new Date(raw).getTime();
+}
+function openImage(src){viewerImage.src=src;imageViewer.classList.add('show');}
+function closeImage(){imageViewer.classList.remove('show');viewerImage.src='';}
+document.getElementById('viewerClose').addEventListener('click',closeImage);
+imageViewer.addEventListener('click',e=>{if(e.target===imageViewer)closeImage();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeImage();});
+
+function createPost(item){
+  const article=document.createElement('article'); article.className='post';
+  const avatarWrap=document.createElement('div'); avatarWrap.className='avatar-wrap';
+  const avatar=document.createElement('img'); avatar.className='avatar'; avatar.alt=item.from; avatar.loading='lazy';
+  avatar.src=`user_img/${encodeURIComponent(item.from)}.jpeg`;
+  avatar.onerror=()=>{avatar.style.visibility='hidden';};
+  avatarWrap.appendChild(avatar);
+
+  const body=document.createElement('div'); body.className='post-body';
+  const meta=document.createElement('div'); meta.className='post-meta';
+  const name=document.createElement('span'); name.className='post-name'; name.textContent=item.from;
+  const date=document.createElement('span'); date.className='post-date'; date.textContent=formatDate(item.date);
+  const more=document.createElement('button'); more.className='post-menu'; more.type='button'; more.textContent='•••'; more.setAttribute('aria-label','投稿メニュー');
+  more.addEventListener('click',()=>alert('投稿メニュー'));
+  meta.append(name,date,more); body.appendChild(meta);
+
+  const bubble=document.createElement('div'); bubble.className='bubble';
+  if(item.image){
+    const image=document.createElement('img'); image.className='post-image'; image.src=item.image; image.alt='投稿画像'; image.loading='lazy';
+    image.addEventListener('click',()=>openImage(item.image)); image.onerror=()=>image.remove(); bubble.appendChild(image);
+  }
+  if(item.message){const message=document.createElement('div');message.className='message';message.textContent=item.message;bubble.appendChild(message);}
+  if(!item.image&&!item.message){const empty=document.createElement('div');empty.className='message';empty.textContent='（画像・本文はありません）';bubble.appendChild(empty);}
+  body.appendChild(bubble); article.append(avatarWrap,body); return article;
+}
+function renderPosts(items,prepend=false){
+  const fragment=document.createDocumentFragment();
+  items.forEach(item=>fragment.appendChild(createPost(item)));
+  if(prepend)postsEl.prepend(fragment);else postsEl.appendChild(fragment);
+}
+function updateBottomButton(){
+  const remaining=mainEl.scrollHeight-mainEl.clientHeight-mainEl.scrollTop;
+  toBottom.classList.toggle('show',remaining>200);
+}
+function renderInitialPosts(){
+  const start=Math.max(0,allPosts.length-POSTS_PER_LOAD);
+  nextIndex=start; renderPosts(allPosts.slice(start));
+  allLoaded=nextIndex===0; statusEl.remove();
+  requestAnimationFrame(()=>{mainEl.scrollTop=mainEl.scrollHeight;updateBottomButton();});
+}
+async function loadOlderPosts(){
+  if(loadingOlder||allLoaded)return;
+  loadingOlder=true;olderLoader.classList.add('show');
+  await new Promise(resolve=>requestAnimationFrame(resolve));
+  try{
+    const oldHeight=mainEl.scrollHeight,oldTop=mainEl.scrollTop;
+    const start=Math.max(0,nextIndex-POSTS_PER_LOAD);
+    const older=allPosts.slice(start,nextIndex);
+    if(!older.length){allLoaded=true;return;}
+    renderPosts(older,true);nextIndex=start;if(nextIndex===0)allLoaded=true;
+    requestAnimationFrame(()=>{mainEl.scrollTop=oldTop+(mainEl.scrollHeight-oldHeight);updateBottomButton();});
+  }catch(e){console.error('古い投稿の追加エラー:',e);}
+  finally{olderLoader.classList.remove('show');loadingOlder=false;}
+}
+mainEl.addEventListener('scroll',()=>{
+  if(mainEl.scrollTop<150&&!loadingOlder&&!allLoaded)loadOlderPosts();
+  updateBottomButton();
+});
+toBottom.addEventListener('click',()=>mainEl.scrollTo({top:mainEl.scrollHeight,behavior:'smooth'}));
+
+function setError(message){
+  statusEl.textContent=message;statusEl.className='error';
+}
+async function start(){
+  if(!roomInfo){setError('room の指定が正しくありません。\nURLの ?room=... を確認してください。');return;}
+  titleEl.textContent=roomInfo.title;
+  const script=document.createElement('script');
+  script.src=roomInfo.source+'.js';
+  script.onload=()=>{
+    const source=window.TALK_SOURCES&&window.TALK_SOURCES[roomInfo.source];
+    if(!source){setError('データ設定を読み込めませんでした。');return;}
+    loadPosts(source,roomInfo).catch(error=>{
+      console.error(error);setError(`投稿を取得できませんでした。\n${error.message}\n\nスプレッドシートがウェブに公開されているか、列名を確認してください。`);
+    });
+  };
+  script.onerror=()=>setError(`${roomInfo.source}.js を読み込めませんでした。`);
+  document.head.appendChild(script);
+}
+async function loadPosts(source,info){
+  const response=await fetch(source.csvUrl,{cache:'no-store'});
+  if(!response.ok)throw new Error(`HTTP ${response.status}`);
+  const rows=parseCSV(await response.text());
+  if(rows.length<2){statusEl.textContent='表示できる投稿がありません。';statusEl.className='empty';return;}
+  const headers=rows[0];
+  const dateI=findColumn(headers,source.columns.date);
+  const fromI=findColumn(headers,source.columns.from);
+  const imageI=findColumn(headers,source.columns.image);
+  const groupI=findColumn(headers,source.columns.group);
+  const messageI=findColumn(headers,source.columns.message);
+  const memberI=findColumn(headers,source.columns.member);
+
+  if(dateI===-1||fromI===-1)throw new Error('必要な列（日時 / from）が見つかりません。CSVの1行目を確認してください。');
+  if(imageI===-1&&messageI===-1)throw new Error('画像URLまたは本文の列が見つかりません。');
+  if(source.filterByGroup&&groupI===-1)throw new Error('必要な列（グループ）が見つかりません。');
+
+  allPosts=rows.slice(1).map(row=>({
+    date:row[dateI]||'',
+    from:String(row[fromI]||'').trim(),
+    image:imageI===-1?'':safeImageUrl(row[imageI]),
+    group:groupI===-1?'':normalizeGroup(row[groupI]),
+    member:memberI===-1?'':String(row[memberI]||'').trim(),
+    message:messageI===-1?'':String(row[messageI]||'').trim()
+  })).filter(item=>item.from&&(!source.filterByGroup||item.group===info.group)&&(item.image||item.message));
+
+  allPosts.sort((a,b)=>{
+    const da=dateValue(a.date),db=dateValue(b.date);
+    if(!Number.isNaN(da)&&!Number.isNaN(db))return da-db;
+    return String(a.date).localeCompare(String(b.date),'ja');
+  });
+  if(!allPosts.length){statusEl.textContent='このルームの投稿はありません。';statusEl.className='empty';return;}
+  renderInitialPosts();
+}
+window.addEventListener('DOMContentLoaded',start);
+})();
+</script>
 </body>
 </html>
